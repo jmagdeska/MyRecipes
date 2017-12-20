@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.jana.myrecipes.activities.MainActivity;
+
 public class Splash extends Activity {
 
     /** Duration of wait **/

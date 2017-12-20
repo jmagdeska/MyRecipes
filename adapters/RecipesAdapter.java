@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.jana.myrecipes.R;
@@ -16,7 +18,7 @@ import com.example.jana.myrecipes.models.RecipesListModel;
  * Created by Jana on 19-Dec-17.
  */
 
-public class RecipesAdapter extends BaseExpandableListAdapter {
+public class RecipesAdapter extends BaseExpandableListAdapter implements ExpandableListAdapter {
 
     private Context context;
     private RecipesListModel recipes;
@@ -93,8 +95,8 @@ public class RecipesAdapter extends BaseExpandableListAdapter {
         TextView recipeIngredients = (TextView) convertView.findViewById(R.id.recipeIngredients);
         TextView recipeDescription = (TextView) convertView.findViewById(R.id.recipeDescription);
 
-        recipeTime.setText(recipeModel.recipeTime);
-        recipeIngredients.setText(recipeModel.recipeIngredients);
+        recipeTime.setText("Time: " + recipeModel.recipeTime);
+        recipeIngredients.setText("Ingredients: " + recipeModel.recipeIngredients);
         recipeDescription.setText(recipeModel.recipeDescription);
 
         return convertView;
@@ -114,5 +116,4 @@ public class RecipesAdapter extends BaseExpandableListAdapter {
         }
         return -1;
     }
-
 }

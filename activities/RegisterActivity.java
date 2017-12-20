@@ -1,4 +1,4 @@
-package com.example.jana.myrecipes;
+package com.example.jana.myrecipes.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.example.jana.myrecipes.R;
+import com.example.jana.myrecipes.db.UserDetailsDB;
 
 /**
  * Created by Jana on 19-Dec-17.
@@ -31,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Context context;
     private SharedPreferences prefs;
+    private UserDetailsDB dbUserDet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,29 +49,32 @@ public class RegisterActivity extends AppCompatActivity {
         surnameEditText = (EditText) findViewById(R.id.inputUserSurname);
         emailEditText = (EditText) findViewById(R.id.inputUserEmail);
         email2EditText = (EditText) findViewById(R.id.inputUserEmail2);
-        usernameEditText = (EditText) findViewById(R.id.input_username);
+        usernameEditText = (EditText) findViewById(R.id.inputUserUsername);
         passwordEditText = (EditText) findViewById(R.id.inputUserPassword);
         password2EditText = (EditText) findViewById(R.id.inputUserPassword2);
         genderGroup = (RadioGroup) findViewById(R.id.radioGroup);
         registerBtn = (Button) findViewById(R.id.saveUserInfoBtn1);
 
+        dbUserDet = new UserDetailsDB(this);
+
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                isValid = validateRegistration();
+                isValid = validateRegistration();
                 SharedPreferences.Editor editor = prefs.edit();
-//                if(isValid) {
+                if(isValid) {
                     addToDB();
                     editor.putString("isLoggedIn", "y");
                     editor.putString("userUsername", userUsername);
                     editor.commit();
                     Intent intent = new Intent(context, MyProfileActivity.class);
                     startActivity(intent);
-//                } else {
-//                    Toast.makeText(context, R.string.invalid_registration, Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(context, LoginActivity.class);
-//                    startActivity(intent);
-//                }
+                }
+              else {
+                    Toast.makeText(context, R.string.invalid_registration, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -108,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
-        if (usernameEditText.getText().toString().isEmpty() || !checkIfUserExist((usernameEditText.getText().toString()))) {
+        if (usernameEditText.getText().toString().isEmpty() || checkIfUserExist((usernameEditText.getText().toString()))) {
             usernameEditText.setError(getString(R.string.enter_username));
             valid = false;
         } else {
@@ -142,10 +149,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public boolean checkIfUserExist(String username){
-        return false;
+        //connect with select user
+        return dbUserDet.checkUser(username);
     }
 
     public void addToDB(){
-
+        //connect with insert user
+//        String username,String password, String email, String name, String surname
+        dbUserDet.insertUser(userUsername,
+                userPassword,
+                userEmail,
+                userName,
+                userSurname);
     }
 }
